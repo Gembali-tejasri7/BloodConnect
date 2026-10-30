@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - BloodConnect</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        .dashboard {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .welcome {
+            color: #c62828;
+            font-size: 30px;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .dashboard-card {
+            background: #fff5f5;
+            padding: 35px 20px;
+            border-radius: 12px;
+            border: 1px solid #f2cccc;
+        }
+
+        .dashboard-card h3 {
+            color: #c62828;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-card a {
+            display: inline-block;
+            margin: 8px 5px;
+            padding: 10px 20px;
+            background: #c62828;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .dashboard-card a:hover {
+            background: #a51d1d;
+        }
+
+        .logout {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="dashboard">
+
+        <h1 class="welcome">
+            Welcome, <span th:text="${userName}"></span>!
+        </h1>
+
+        <p>
+            Your role:
+            <strong th:text="${userRole}"></strong>
+        </p>
+
+        <div class="dashboard-cards">
+
+            <!-- DONOR OPTIONS -->
+            <div class="dashboard-card"
+                 th:if="${userRole == 'DONOR'}">
+
+                <h3>Donor Dashboard</h3>
+
+                <p>Manage your donor profile and availability.</p>
+
+                <a th:href="@{/donor/profile}">
+                    My Donor Profile
+                </a>
+
+                <a th:href="@{/donor/requests}">
+                    View Blood Requests
+                </a>
+
+            </div>
+
+            <!-- RECIPIENT OPTIONS -->
+            <div class="dashboard-card"
+                 th:if="${userRole == 'RECIPIENT'}">
+
+                <h3>Recipient Dashboard</h3>
+
+                <p>Search for potential donors and manage your blood requests.</p>
+
+                <a th:href="@{/find-donors}">
+                    Find Blood Donors
+                </a>
+
+                <a th:href="@{/blood-request/new}">
+                    Create Blood Request
+                </a>
+
+                <a th:href="@{/blood-requests/my}">
+                    View My Blood Requests
+                </a>
+
+            </div>
+            
+            <div class="dashboard-card" th:if="${userRole == 'ADMIN'}">
+                <h3>Administrator Dashboard</h3>
+                <p>Monitor users, blood requests and donor responses.</p>
+                <a th:href="@{/admin/dashboard}">
+                    Open Admin Dashboard
+                </a>
+            </div>
+
+            <!-- COMMON ACCOUNT OPTIONS -->
+            <div class="dashboard-card">
+
+                <h3>My Account</h3>
+
+                <p>Return to the BloodConnect homepage.</p>
+
+                <a th:href="@{/}">
+                    Home
+                </a>
+
+            </div>
+
+        </div>
+
+        <a th:href="@{/logout}" class="logout">
+            Logout
+        </a>
+
+    </div>
+
+</body>
+</html>

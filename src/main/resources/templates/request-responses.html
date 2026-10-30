@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Donor Responses - BloodConnect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .response-card {
+            padding: 18px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 7px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Donor Responses</h1>
+
+    <h3>
+        Request:
+        <span th:text="${request.bloodGroup}"></span>
+    </h3>
+
+    <p>
+        Location:
+        <span th:text="${request.location}"></span>
+    </p>
+
+    <div th:if="${#lists.isEmpty(responses)}">
+        <p>No donors have responded to this request yet.</p>
+    </div>
+
+    <div th:each="item : ${responses}" class="response-card">
+
+        <h3 th:text="${item.donor.fullName}">Donor Name</h3>
+
+        <p>
+            Blood Group:
+            <span th:text="${item.donor.bloodGroup}"></span>
+        </p>
+
+        <p>
+            Location:
+            <span th:text="${item.donor.location}"></span>
+        </p>
+
+        <p>
+            Response:
+            <strong th:text="${item.status}"></strong>
+        </p>
+
+    </div>
+
+    <a th:href="@{/blood-requests/my}">Back to My Requests</a>
+
+</div>
+
+</body>
+</html>

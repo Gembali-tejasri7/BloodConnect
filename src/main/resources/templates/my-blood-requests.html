@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blood Requests - BloodConnect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .request-card {
+            border: 1px solid #ddd;
+            border-left: 5px solid #c62828;
+            border-radius: 7px;
+            padding: 18px;
+            margin: 15px 0;
+        }
+
+        .status {
+            font-weight: bold;
+            color: #c62828;
+        }
+
+        .new-request {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #c62828;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>My Blood Requests</h1>
+
+    <a class="new-request" th:href="@{/blood-request/new}">
+        Create New Request
+    </a>
+
+    <div th:if="${#lists.isEmpty(requests)}">
+        <p>You have not submitted any blood requests yet.</p>
+    </div>
+
+    <div th:each="request : ${requests}" class="request-card">
+
+        <h3>
+            Blood Group:
+            <span th:text="${request.bloodGroup}"></span>
+        </h3>
+
+        <p>
+            Location:
+            <span th:text="${request.location}"></span>
+        </p>
+
+        <p>
+            Units Required:
+            <span th:text="${request.units}"></span>
+        </p>
+
+        <p>
+            Additional Details:
+            <span th:text="${request.description}"></span>
+        </p>
+
+        <p>
+            Request Date:
+            <span th:text="${#temporals.format(request.requestDate,
+                'dd-MM-yyyy HH:mm')}"></span>
+        </p>
+
+        <p class="status">
+            Status:
+            <span th:text="${request.status}"></span>
+        </p>
+        <a th:href="@{/blood-requests/{id}/responses(id=${request.id})}">
+            View Donor Responses
+        </a>
+    </div>
+
+    <p>
+        <a th:href="@{/dashboard}">Back to Dashboard</a>
+    </p>
+
+</div>
+
+</body>
+</html>

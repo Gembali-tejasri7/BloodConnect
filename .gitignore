@@ -1,0 +1,40 @@
+
+# Maven generated files
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# Java compiled files
+*.class
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Environment and secret files
+.env
+.env.*
+!.env.example
+
+# Local configuration overrides
+application-local.properties
+application-dev.properties
+
+# Temporary files
+*.tmp
+*.bak

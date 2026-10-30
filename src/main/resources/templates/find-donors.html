@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Blood Donors - BloodConnect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .search-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .search-form select,
+        .search-form input {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-form button {
+            padding: 12px 22px;
+            background: #c62828;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .donor-card {
+            border: 1px solid #ddd;
+            border-left: 5px solid #c62828;
+            border-radius: 7px;
+            padding: 18px;
+            margin: 15px 0;
+        }
+
+        .donor-card h3 {
+            margin-top: 0;
+        }
+
+        .blood-group {
+            display: inline-block;
+            background: #ffebee;
+            color: #b71c1c;
+            padding: 6px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .message {
+            padding: 15px;
+            background: #fff3e0;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #c62828;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="search-container">
+
+    <h1>Find Blood Donors</h1>
+    <p>Search for available blood donors by blood group and location.</p>
+
+    <form class="search-form" th:action="@{/find-donors}" method="get">
+
+        <select name="bloodGroup">
+            <option value="">All Blood Groups</option>
+            <option value="A+" th:selected="${selectedBloodGroup == 'A+'}">A+</option>
+            <option value="A-" th:selected="${selectedBloodGroup == 'A-'}">A-</option>
+            <option value="B+" th:selected="${selectedBloodGroup == 'B+'}">B+</option>
+            <option value="B-" th:selected="${selectedBloodGroup == 'B-'}">B-</option>
+            <option value="AB+" th:selected="${selectedBloodGroup == 'AB+'}">AB+</option>
+            <option value="AB-" th:selected="${selectedBloodGroup == 'AB-'}">AB-</option>
+            <option value="O+" th:selected="${selectedBloodGroup == 'O+'}">O+</option>
+            <option value="O-" th:selected="${selectedBloodGroup == 'O-'}">O-</option>
+        </select>
+
+        <input type="text"
+               name="location"
+               placeholder="Enter city or location"
+               th:value="${selectedLocation}">
+
+        <button type="submit">Search Donors</button>
+    </form>
+
+    <h2>Available Donors</h2>
+
+    <div th:if="${#lists.isEmpty(donors)}" class="message">
+        No available donors found. Try another blood group or location.
+    </div>
+
+    <div th:each="donor : ${donors}" class="donor-card">
+        <h3 th:text="${donor.fullName}">Donor Name</h3>
+
+        <p>
+            Blood Group:
+            <span class="blood-group"
+                  th:text="${donor.bloodGroup}">B+</span>
+        </p>
+
+        <p>
+            Location:
+            <span th:text="${donor.location}">Location</span>
+        </p>
+
+        <p><strong>Status:</strong> Available</p>
+    </div>
+
+    <a class="back-link" th:href="@{/dashboard}">
+        Back to Dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

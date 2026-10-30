@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>BloodConnect Admin Dashboard</title>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 25px;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #9b1c31;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 2px 6px #ccc;
+        }
+
+        .number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #9b1c31;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #9b1c31;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        button {
+            background: #9b1c31;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #751326;
+        }
+
+        select {
+            padding: 7px;
+            margin-bottom: 5px;
+        }
+
+        .message-success {
+            color: green;
+            font-weight: bold;
+        }
+
+        .message-error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .logout {
+            display: inline-block;
+            background: #9b1c31;
+            color: white;
+            padding: 10px 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Welcome, BloodConnect Admin!</h1>
+<p>Your role: <strong>ADMIN</strong></p>
+
+<p th:if="${successMessage}"
+   th:text="${successMessage}"
+   class="message-success">
+</p>
+
+<p th:if="${errorMessage}"
+   th:text="${errorMessage}"
+   class="message-error">
+</p>
+
+<!-- PLATFORM STATISTICS -->
+
+<h2>Platform Statistics</h2>
+
+<div class="stats">
+
+    <div class="card">
+        Total Users
+        <div class="number" th:text="${totalUsers}">0</div>
+    </div>
+
+    <div class="card">
+        Total Donors
+        <div class="number" th:text="${totalDonors}">0</div>
+    </div>
+
+    <div class="card">
+        Total Recipients
+        <div class="number" th:text="${totalRecipients}">0</div>
+    </div>
+
+    <div class="card">
+        Total Blood Requests
+        <div class="number" th:text="${totalRequests}">0</div>
+    </div>
+
+    <div class="card">
+        Total Donor Responses
+        <div class="number" th:text="${totalResponses}">0</div>
+    </div>
+
+</div>
+
+<!-- REGISTERED USERS -->
+
+<h2>Registered Users</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Blood Group</th>
+        <th>Location</th>
+        <th>Available</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.fullName}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.bloodGroup}"></td>
+        <td th:text="${user.location}"></td>
+        <td th:text="${user.available}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- MANAGE DONOR AVAILABILITY -->
+
+<h2>Manage Donor Availability</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Donor Name</th>
+        <th>Blood Group</th>
+        <th>Location</th>
+        <th>Current Availability</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="donor : ${donors}">
+
+        <td th:text="${donor.fullName}"></td>
+        <td th:text="${donor.bloodGroup}"></td>
+        <td th:text="${donor.location}"></td>
+
+        <td>
+            <span th:if="${donor.available == true}">
+                AVAILABLE
+            </span>
+
+            <span th:unless="${donor.available == true}">
+                NOT AVAILABLE
+            </span>
+        </td>
+
+        <td>
+            <form th:action="@{/admin/donors/{id}/availability(id=${donor.id})}"
+                  method="post">
+
+                <button type="submit"
+                        th:text="${donor.available == true ? 'Deactivate' : 'Activate'}">
+                </button>
+
+            </form>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<!-- ALL BLOOD REQUESTS -->
+
+<h2>All Blood Requests</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Request ID</th>
+        <th>Recipient</th>
+        <th>Blood Group</th>
+        <th>Location</th>
+        <th>Units</th>
+        <th>Status</th>
+        <th>Date</th>
+        <th>Update Status</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="request : ${requests}">
+
+        <td th:text="${request.id}"></td>
+        <td th:text="${request.recipient.fullName}"></td>
+        <td th:text="${request.bloodGroup}"></td>
+        <td th:text="${request.location}"></td>
+        <td th:text="${request.units}"></td>
+        <td th:text="${request.status}"></td>
+        <td th:text="${request.requestDate}"></td>
+
+        <td>
+            <form th:action="@{/admin/requests/{id}/status(id=${request.id})}"
+                  method="post">
+
+                <select name="status">
+
+                    <option value="PENDING"
+                            th:selected="${request.status == 'PENDING'}">
+                        PENDING
+                    </option>
+
+                    <option value="APPROVED"
+                            th:selected="${request.status == 'APPROVED'}">
+                        APPROVED
+                    </option>
+
+                    <option value="COMPLETED"
+                            th:selected="${request.status == 'COMPLETED'}">
+                        COMPLETED
+                    </option>
+
+                    <option value="CANCELLED"
+                            th:selected="${request.status == 'CANCELLED'}">
+                        CANCELLED
+                    </option>
+
+                </select>
+
+                <button type="submit">Update</button>
+
+            </form>
+        </td>
+
+    </tr>
+
+    </tbody>
+</table>
+
+<!-- DONOR RESPONSES -->
+
+<h2>Donor Responses</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Donor</th>
+        <th>Request ID</th>
+        <th>Blood Group</th>
+        <th>Status</th>
+        <th>Response Date</th>
+    </tr>
+    </thead>
+
+    <tbody>
+
+    <tr th:each="item : ${responses}">
+
+        <td th:text="${item.donor.fullName}"></td>
+        <td th:text="${item.bloodRequest.id}"></td>
+        <td th:text="${item.bloodRequest.bloodGroup}"></td>
+        <td th:text="${item.status}"></td>
+        <td th:text="${item.responseDate}"></td>
+
+    </tr>
+
+    </tbody>
+</table>
+
+<!-- NAVIGATION -->
+
+<a class="logout" th:href="@{/dashboard}">
+    Back to Dashboard
+</a>
+
+<a class="logout" th:href="@{/logout}">
+    Logout
+</a>
+
+</body>
+</html>

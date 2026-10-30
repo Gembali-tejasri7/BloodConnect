@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Blood Requests - BloodConnect</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .request-card {
+            border: 1px solid #ddd;
+            border-left: 5px solid #c62828;
+            padding: 18px;
+            margin: 15px 0;
+            border-radius: 7px;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .accept {
+            background: #2e7d32;
+        }
+
+        .decline {
+            background: #c62828;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Blood Requests</h1>
+
+    <div th:if="${unavailable}">
+        <p>You are currently marked unavailable. Update your donor profile
+           to view matching requests.</p>
+    </div>
+
+    <div th:if="${!unavailable and #lists.isEmpty(requests)}">
+        <p>No matching pending blood requests are available right now.</p>
+    </div>
+
+    <div th:each="request : ${requests}" class="request-card">
+
+        <h3>
+            Required Blood Group:
+            <span th:text="${request.bloodGroup}"></span>
+        </h3>
+
+        <p>
+            Location:
+            <span th:text="${request.location}"></span>
+        </p>
+
+        <p>
+            Units Required:
+            <span th:text="${request.units}"></span>
+        </p>
+
+        <p>
+            Details:
+            <span th:text="${request.description}"></span>
+        </p>
+
+        <form th:action="@{/donor/requests/{id}/respond(id=${request.id})}"
+              method="post">
+
+            <button class="accept" type="submit"
+                    name="response" value="ACCEPTED">
+                Accept
+            </button>
+
+            <button class="decline" type="submit"
+                    name="response" value="DECLINED">
+                Decline
+            </button>
+
+        </form>
+
+    </div>
+
+    <a th:href="@{/dashboard}">Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>
